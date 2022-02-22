@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 public interface UserRepository extends CrudRepository<User, Integer>{
 
 	User findUserByEmail(String email);
-	void deleteUserByEmail(String email);
+	User findUserById(Integer id);
+	void deleteUserById(Integer id);
 	
 }

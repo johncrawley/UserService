@@ -5,9 +5,9 @@ import com.jcrawley.userservice.repository.User;
 
 public interface UserService {
 
-	User saveUser(User user);
-	void deleteUser(UserDto user);
-	void updateUser(UserDto user, Integer id);
-	User findUserByEmail(String email);
+	UserDto saveUser(UserDto user);
+	void deleteUser(Integer id);
+	UserDto updateUser(Integer id, UserDto user);
+	UserDto findUserById(Integer id);
 	
 }
