@@ -3,6 +3,10 @@ package com.jcrawley.userservice.service;
 import java.time.Instant;
 import java.util.Date;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.jcrawley.userservice.model.UserDto;
 import com.jcrawley.userservice.repository.User;
 import com.jcrawley.userservice.repository.UserRepository;
@@ -10,6 +14,7 @@ import com.jcrawley.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Service	
 public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
@@ -45,7 +50,18 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto findUserById(Integer id) {
 		User user = userRepository.findUserById(id);
+		throw404IfNull(user);
 		return getUserDto(user);
+	}
+	
+	
+	
+	private void throw404IfNull(User user) {
+		if(user == null) {
+			throw new ResponseStatusException(
+					  HttpStatus.NOT_FOUND, "entity not found"
+					);
+		}
 	}
 	
 	

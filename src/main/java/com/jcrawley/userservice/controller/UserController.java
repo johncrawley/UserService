@@ -1,5 +1,6 @@
 package com.jcrawley.userservice.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +24,12 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/user")
 public class UserController {
 
+	@Autowired	
 	private UserService userService;
 	
 	
 	@GetMapping("/{userId}")
-	public ResponseEntity<UserDto> getUser(@PathVariable Integer id){
-		System.out.println("Get : " + id);
+	public ResponseEntity<UserDto> getUser(@PathVariable("userId") Integer id){
 		return new ResponseEntity<>(userService.findUserById(id), HttpStatus.OK);		
 	}
 	
