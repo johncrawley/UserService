@@ -19,7 +19,7 @@ public class UserDto {
 
 	private Integer id;
 	@Email
-	@JsonProperty("password")
+	//@JsonProperty("email")
 	private String email;
 	@NotNull
 	@Size(min=3, max=24)
