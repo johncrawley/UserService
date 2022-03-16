@@ -24,19 +24,22 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jcrawley.userservice.model.UserDto;
+import com.jcrawley.userservice.repository.User;
 import com.jcrawley.userservice.service.UserService;
+import com.jcrawley.userservice.service.UserServiceNoDto;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/user")
-@Validated
 public class UserController {
 
 	@Autowired	
 	private UserService userService;
 	
+	@Autowired
+	private UserServiceNoDto userServiceNoDto;
 	
 	@GetMapping("/{userId}")
 	public ResponseEntity<UserDto> getUser(@PathVariable("userId") Integer id){
@@ -52,6 +55,13 @@ public class UserController {
 	}
 	
 	
+	
+	@PostMapping("/nodto")
+	public ResponseEntity<User> save(@Valid @RequestBody User user){
+		return ResponseEntity.ok(userServiceNoDto.saveUser(user));
+	}
+	
+
 	private HttpHeaders getLocationHeaderFor(UserDto userDto) {
 		HttpHeaders headers = new HttpHeaders();
 		if(userDto != null) {
@@ -59,6 +69,7 @@ public class UserController {
 		}
 		return headers;
 	}
+	
 	
 	
 	@DeleteMapping("/{userId}")
@@ -80,6 +91,7 @@ public class UserController {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public Map<String, String> handleValidationExceptions(
 	  MethodArgumentNotValidException ex) {
+		System.out.println("Exception: BAD REQUEST!");
 	    Map<String, String> errors = new HashMap<>();
 	    ex.getBindingResult().getAllErrors().forEach((error) -> {
 	        String fieldName = ((FieldError) error).getField();
