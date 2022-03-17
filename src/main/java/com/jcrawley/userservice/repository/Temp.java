@@ -9,12 +9,13 @@ import javax.validation.constraints.NotBlank;
 @Entity
 public class Temp {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	
+
 	@NotBlank(message = "X should not be blank!")
 	private String x;
-	
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
 	
 	
 	public Temp() {}
@@ -25,6 +26,14 @@ public class Temp {
 	
 	public String getX() {
 		return this.x;
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
+	public Long getId() {
+		return this.id;
 	}
 
 }

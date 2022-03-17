@@ -3,7 +3,10 @@ package com.jcrawley.userservice.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Size;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jcrawley.userservice.model.UserDto;
+import com.jcrawley.userservice.repository.Temp;
 import com.jcrawley.userservice.repository.User;
 import com.jcrawley.userservice.service.UserService;
 import com.jcrawley.userservice.service.UserServiceNoDto;
@@ -32,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
+@Validated
 @RequestMapping("/api/v1/user")
 public class UserController {
 
@@ -54,6 +59,19 @@ public class UserController {
 		return new ResponseEntity<>(savedDto, getLocationHeaderFor(userDto), HttpStatus.CREATED);	
 	}
 	
+
+	@PostMapping("/temp")
+	public ResponseEntity<String> save(@RequestBody @Valid Temp temp){
+		return ResponseEntity.ok("It was ok!");
+	}
+	
+
+	@GetMapping("/temp/{tempStr}/{tempInt}")
+	public ResponseEntity<String> getTemp(
+			@PathVariable @Size(min = 4, max = 6) String tempStr,
+			@PathVariable @Max(4) Integer tempInt){
+		return ResponseEntity.ok("It was ok get: " + tempStr);
+	}
 	
 	
 	@PostMapping("/nodto")
@@ -85,19 +103,5 @@ public class UserController {
 		return new ResponseEntity<>(updatedUserDto, HttpStatus.NO_CONTENT);
 	}
 	
-	
-	
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public Map<String, String> handleValidationExceptions(
-	  MethodArgumentNotValidException ex) {
-		System.out.println("Exception: BAD REQUEST!");
-	    Map<String, String> errors = new HashMap<>();
-	    ex.getBindingResult().getAllErrors().forEach((error) -> {
-	        String fieldName = ((FieldError) error).getField();
-	        String errorMessage = error.getDefaultMessage();
-	        errors.put(fieldName, errorMessage);
-	    });
-	    return errors;
-	}
+
 }
