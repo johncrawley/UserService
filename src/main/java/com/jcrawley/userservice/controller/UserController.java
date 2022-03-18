@@ -61,7 +61,8 @@ public class UserController {
 	
 
 	@PostMapping("/temp")
-	public ResponseEntity<String> save(@RequestBody @Valid Temp temp){
+	public ResponseEntity<String> save(@Valid @RequestBody Temp temp){
+		System.out.println("Temp x: "+ temp.getX());
 		return ResponseEntity.ok("It was ok!");
 	}
 	
