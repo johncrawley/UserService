@@ -1,6 +1,5 @@
 package com.jcrawley.userservice.model;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -18,7 +17,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
 public class UserDto {
 
 	@Id
@@ -27,13 +25,13 @@ public class UserDto {
 	//@JsonProperty("email")
 	private String email;
 	@NotNull
-	@Size(min=3, max=24)
+	@Size(min=3, max=24, message="name field must be between 3 and 24 characters long")
 	private String name;
 	 
 	@NotBlank(message = "Tagline is mandatory")
 	private String tagline;
 	@NotNull
 	@JsonProperty("password")
-	@Size(min=7, max=24)
+	@Size(min=7, max=24, message="password must be between 7 and 24 characters long")
 	private String password;
 }

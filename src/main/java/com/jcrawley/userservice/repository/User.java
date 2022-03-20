@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.validation.annotation.Validated;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,7 +43,6 @@ public class User {
 	private Date dateCreated;
 	
 	@Column
-    @NotBlank(message = "Tagline is mandatory")
 	private String tagline;
 	
 }
