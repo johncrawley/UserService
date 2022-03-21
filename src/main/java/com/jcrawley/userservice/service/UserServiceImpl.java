@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
 	public UserDto saveUser(UserDto userDto) {
 		User user = User.builder()
 				.name(userDto.getName())
-				.email(userDto.getEmail())
+				.email(userDto.getEmail().toLowerCase())
 				.password(userDto.getPassword())
 				.tagline(userDto.getTagline())
 				.dateCreated( Date.from(Instant.now()))
