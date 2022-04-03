@@ -3,20 +3,54 @@ package com.jcrawley.userservice.config;
 import java.util.Arrays;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-@EnableGlobalMethodSecurity(securedEnabled=true, prePostEnabled=true)
-@EnableWebSecurity
-public class WebSecurity extends WebSecurityConfigurerAdapter {
+//@EnableGlobalMethodSecurity(securedEnabled=true, prePostEnabled=true)
+//@EnableWebSecurity
+@EnableResourceServer
+@Configuration
+public class WebSecurity extends ResourceServerConfigurerAdapter {
 
+
+	@Override
+	public void configure(HttpSecurity http) throws Exception {
+
+		JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+		jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new KeycloakRoleConverter());
+		
+		  http
+          .requestMatchers()
+              .antMatchers(HttpMethod.GET, "/api/v1/user**")
+          .and().authorizeRequests()
+              .anyRequest().authenticated();
+		
+		 /*
+		http.cors().and().authorizeRequests()
+    	.antMatchers("/api/**").permitAll()
+    	.antMatchers("/api/v1/user").permitAll()
+    	.antMatchers(HttpMethod.GET, "/api/v1/user").authenticated()
+    	.antMatchers("/").permitAll();*/
+	}
+	
+	
+
+    @Override
+    public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+        resources.resourceId("my-resource-id");
+    }
+    
+	
+	/*
+	 * doesn't work for anonymous access
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -25,15 +59,20 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new KeycloakRoleConverter());
 		
 		http.cors().and().authorizeRequests()
+		.antMatchers("/login", "/api/v1/user").permitAll()
+		.antMatchers(HttpMethod.POST, "/api/v1/user").permitAll()
+		.anyRequest().authenticated()
 		//.anyRequest().authenticated()
-		.antMatchers(HttpMethod.GET, "/api/v1/user**")
+		//.antMatchers(HttpMethod.GET, "/api/v1/user**")
 		//.hasAuthority("SCOPE_profile")
-		.hasRole("user")
+		//.hasRole("user")
 		.and()	
 		.oauth2ResourceServer()
 		.jwt()
 		.jwtAuthenticationConverter(jwtAuthenticationConverter);
 	}
+	
+	*/
 	
 	
 
